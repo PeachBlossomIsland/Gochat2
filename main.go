@@ -13,9 +13,8 @@ import (
     // "bufio"
     "fmt"
 )
-var clients=make(map[*websocket.Conn]bool) //连接的客户端
-var broadcast=make(chan Message) //接受的消息管道
-// var upgrader=websocket.Upgrader{} //获取一个普通的HTTP连接，然后将其升级为websocket
+var clients=make(map[*websocket.Conn]bool) //Connected client
+var broadcast=make(chan Message) //Accepted message pipeline
 var upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
@@ -31,15 +30,12 @@ type Message struct {
 }
 // type Message string 
 func main() {
-	//创建一个简单的文件服务器
-	// fs:=http.FileServer(http.Dir("../public"))
-	// http.Handle("/",fs)
-	//设置访问路由，在url中/ws的就用handleConnections函数处理
+	
+	//Set access route
 	http.HandleFunc("/ws", handleConnections)
-    // fmt.Println("捕获了")
-	//处理用户发送来的数据，将这些数据发送到每一个客户端
+	//Process the data sent by the user and send the data to each client
 	go handleMessages()
-	//开启服务
+	//Open service
 	log.Println("http server started on:8080")
 	err:=http.ListenAndServe("localhost:8080", nil)
 	if err!=nil {
@@ -47,21 +43,20 @@ func main() {
 	}
 }
 func handleConnections(w http.ResponseWriter, r *http.Request) {
-        // 得到websocket连接的客户端ws
-		//调用upgrader.Upgrade(w, r, nil)获得这个连接的指针
+		//Call upgrader.Upgrade(w, r, nil) to get the pointer to this connection
         fmt.Println("handleConnections")
         ws, err := upgrader.Upgrade(w, r, nil)
         if err != nil {
                 log.Fatal(err)
         }
-        // 确保在函数返回时将websocket关闭
+        // Make sure the websocket is closed when the function returns
         defer ws.Close()
-        //将websocket加入到clients中
+        //Add websocket to clients
         clients[ws] = true
         fmt.Println("有用户连接")
          for {
                 var msg Message               
-                //将ws中的数据已json的类型读入到msg中
+                //Read the type of json data in ws into msg
                 err := ws.ReadJSON(&msg)
                 // msg:=bufio.NewReader.ReadString()
                 if err != nil {
@@ -69,7 +64,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
                         delete(clients, ws)
                         break
                 }
-                //将刚接收的客户端的信息放入到消息管道中，用于向其他客户端发送
+                //Put the information of the client just received into the message pipeline for sending to other clients
                 broadcast <- msg
             }
 }
