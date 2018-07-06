@@ -1,0 +1,9 @@
+这个也是一个基于websocket的go语言写的服务器段的聊天室程序，是初学go语言和初次使用git进行的，代码质量不高，也算是一次尝试。
+这个程序参考了很多网上的东西，主要是熟悉和理解语言为主的。当然，这个代码还不完善，需要更多的改进。main.go是服务器端代码，
+client.html是客户端。首先运行main.go，再次就可以打开多个client进行聊天。
+具体链接如下：
+https://www.jianshu.com/p/eebf44c1d6db
+https://www.oschina.net/translate/build-a-realtime-chat-server-with-go-and-websockets?lang=chs&page=1#
+https://astaxie.gitbooks.io/build-web-application-with-golang/zh/03.2.html
+https://segmentfault.com/a/1190000011673663
+https://godoc.org/github.com/gorilla/websocket#Conn.ReadMessage

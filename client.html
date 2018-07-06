@@ -1,0 +1,115 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Web sockets test</title>
+     <style type="text/css">
+        html,body {
+            height: 100%;
+            width:100%
+        }
+    </style>
+
+    <script type="text/javascript">
+
+      var websocket = null;
+      //判断当前浏览器是否支持WebSocket
+      if('WebSocket' in window){
+          // alert("尝试连接")
+          websocket = new WebSocket("ws://127.0.0.1:8080/ws");
+      }
+      else{
+          alert('您的浏览器不支持 websocket！')
+      }
+          
+      //连接发生错误的回调方法
+      websocket.onerror = function(){
+          setMessageInnerHTML("error");
+      };
+          
+      //连接成功建立的回调方法
+      websocket.onopen = function(event){
+          alert("链接成功,欢迎加入聊天室！");
+      }
+          
+      //接收到消息的回调方法
+      websocket.onmessage = function(event){
+          // alert("接收消息函数")
+         //解析json数据
+          var obj =JSON.parse(event.data);
+          if(obj.message=="退出了聊天室！")
+          {
+            var msg=obj.username+obj.message+"。"
+          }else{
+            var msg=obj.username+":"+obj.message+"。"
+          }
+          setMessageInnerHTML(msg);
+      }
+          
+      //连接关闭的回调方法
+      websocket.onclose = function(){
+          var username=document.getElementById('username').value;
+          setMessageInnerHTML(username+" 退出了聊天室！");
+      }
+          
+      //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+      window.onbeforeunload = function(){
+        //向服务器发送离开的消息
+          send(false);
+          websocket.close();
+      }
+          
+      //将消息显示在网页上
+      function setMessageInnerHTML(innerHTML){
+          document.getElementById('message').innerHTML += innerHTML + "\n";
+      }
+          
+      //关闭连接
+      function closeWebSocket(){
+          // alert("调用close函数")
+          send(false);
+          websocket.close();
+      }
+          
+      //发送消息
+      function send(b){
+        //当d为真时，表示在线，为假时表示离开
+        if(b)
+        {
+           // alert("调用send函数");
+          var username=document.getElementById('username').value;
+          var message = document.getElementById('text').value;
+          //将消息包装成json数据
+          var str = {"username":username, "message":message}
+          var out=JSON.stringify(str)
+          // websocket.send(" "+username+": "+message);
+          websocket.send(out)
+          document.getElementById('text').value="";
+          // document.getElementById('message').innerHTML+=message+"\n";
+        }else {
+          var username=document.getElementById('username').value;
+          var text="退出了聊天室！";
+          //将消息包装成json数据
+          var str = {"username":username, "message":text}
+          var out=JSON.stringify(str)
+          // websocket.send(" "+username+": "+message);
+          websocket.send(out)
+        }
+      }
+
+	</script>
+</head>
+ <body>
+ 	<div style="height:5%; width: 100%">
+ 		<label>用户名:</label>
+ 		<input type="text" id="username" style="max-width: 200px height:20px" />
+ 	</div>
+ 	<div style="height:85%; width: 100% background:#09F;">
+ 		<textarea style="width:100%;height:100%;display: inline-table;" id="message"></textarea>
+ 	</div style="height:10%; width: 100% ">
+ 		<input type="text" id="text" style="width:500px;"  />
+ 		<button onclick="send(true)">发送</button>&nbsp&nbsp
+ 		<button onclick="closeWebSocket()">退出聊天室</button>
+ 	</div>
+ </body>
+</html>
+
