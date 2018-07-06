@@ -1,5 +1,5 @@
 /*
-这个程序参考，基本是抄，主要是刚学，重在理解：
+这个程序参考：
 https://www.jianshu.com/p/eebf44c1d6db
 https://www.oschina.net/translate/build-a-realtime-chat-server-with-go-and-websockets?lang=chs&page=1#
 https://astaxie.gitbooks.io/build-web-application-with-golang/zh/03.2.html
