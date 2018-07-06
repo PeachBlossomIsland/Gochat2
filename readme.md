@@ -1,6 +1,8 @@
 这个也是一个基于websocket的go语言写的服务器段的聊天室程序，是初学go语言和初次使用git进行的，代码质量不高，也算是一次尝试。
 这个程序参考了很多网上的东西，主要是熟悉和理解语言为主的。当然，这个代码还不完善，需要更多的改进。main.go是服务器端代码，
-client.html是客户端。首先运行main.go，再次就可以打开多个client进行聊天。
+client.html是客户端。首先运行main.go，再次就可以打开多个client进行聊天。这个是基于本地地址和8080端口的，后续，可以再客户端的
+html中加入一个填写服务器端ip的input，这样，可能就更加灵活。前端页面的代码很是简陋，但是基本功能还是实现了。如果可以，后续可以
+多加点渲染。
 具体参考内容如下链接：
 https://www.jianshu.com/p/eebf44c1d6db
 https://www.oschina.net/translate/build-a-realtime-chat-server-with-go-and-websockets?lang=chs&page=1#
